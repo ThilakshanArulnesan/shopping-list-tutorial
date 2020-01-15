@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import uuid from 'uuid';
+import { connect } from 'react-redux';
+import { getItems } from '../actions/itemActions';
+import Proptypes from 'prop-types';
 
-export default function ShoppingList(props) {
-  const [items, setItems] = useState([
-    { id: uuid(), name: 'Eggs' },
-    { id: uuid(), name: 'Milk' },
-    { id: uuid(), name: 'Steak' },
-    { id: uuid(), name: 'Water' }
-  ]);
+function ShoppingList(props) {
+  useEffect(() => {
+    props.getItems();
+  }, [])
+  const { items } = props.item;
 
   return (
     <Container>
@@ -19,7 +19,7 @@ export default function ShoppingList(props) {
         onClick={() => {
           const name = prompt('Enter Item')
           if (name) {
-            setItems([...items, { id: uuid(), name }]);
+            // setItems([...items, { id: uuid(), name }]);
           }
         }}>Add Item</Button>
       <ListGroup>
@@ -31,7 +31,7 @@ export default function ShoppingList(props) {
                   className="remove-btn"
                   color="danger"
                   size="sm"
-                  onClick={() => setItems(items.filter(item => item.id !== id))}
+                // onClick={() => setItems(items.filter(item => item.id !== id))}
                 >&times;</Button>
                 {name}
               </ListGroupItem>
@@ -42,3 +42,14 @@ export default function ShoppingList(props) {
     </Container >
   )
 };
+
+ShoppingList.propTypes = {
+  getItems: Proptypes.func.isRequired,
+  item: Proptypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  item: state.item
+});
+
+export default connect(mapStateToProps, { getItems })(ShoppingList)
