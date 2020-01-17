@@ -1,52 +1,71 @@
-import React, { useEffect } from 'react';
-import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap';
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { connect } from 'react-redux';
-import { getItems } from '../actions/itemActions';
-import Proptypes from 'prop-types';
+import React, { useEffect } from "react";
+import { Container, ListGroup, ListGroupItem, Button } from "reactstrap";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { connect } from "react-redux";
+import { getItems, deleteItem } from "../actions/itemActions";
+import Proptypes from "prop-types";
 
-function ShoppingList(props) {
+function ShoppingList({ getItems, deleteItem, item }) {
   useEffect(() => {
-    props.getItems(); //Dispatches action to get items from db
-  }, [])
-  const { items } = props.item;
+    getItems(); //Dispatches action to get items from db
+  }, [getItems]);
+  const { items } = item;
+
+  const handleDeleteClick = id => {
+    deleteItem(id); //this is the action being passed in as a prop, not the one that has been imported (that one has been connected to the props via the store+ connector)
+  };
 
   return (
     <Container>
       <Button
         color="dark"
-        style={{ marginBottom: '2rem' }}
+        style={{ marginBottom: "2rem" }}
         onClick={() => {
-          const name = prompt('Enter Item')
+          const name = prompt("Enter Item");
           if (name) {
             // setItems([...items, { id: uuid(), name }]);
           }
-        }}>Add Item</Button>
+        }}
+      >
+        Add Item
+      </Button>
       <ListGroup>
         <TransitionGroup className="shopping-list">
           {items.map(({ id, name }) => {
-            return (<CSSTransition key={id} timeout={500} classNames="fade">
-              <ListGroupItem>
-                <Button
-                  className="remove-btn"
-                  color="danger"
-                  size="sm"
-                // onClick={() => setItems(items.filter(item => item.id !== id))}
-                >&times;</Button>
-                {name}
-              </ListGroupItem>
-            </CSSTransition>)
+            return (
+              <CSSTransition key={id} timeout={500} classNames="fade">
+                <ListGroupItem>
+                  <Button
+                    className="remove-btn"
+                    color="danger"
+                    size="sm"
+                    onClick={() => handleDeleteClick(id)}
+                  >
+                    &times;
+                  </Button>
+                  {name}
+                </ListGroupItem>
+              </CSSTransition>
+            );
           })}
         </TransitionGroup>
       </ListGroup>
-    </Container >
-  )
-};
+    </Container>
+  );
+}
 
 ShoppingList.propTypes = {
   getItems: Proptypes.func.isRequired,
   item: Proptypes.object.isRequired
-}
+};
+
+/*
+If a mapStateToProps function is specified, the new wrapper component will subscribe to Redux store updates. This means that any time the store is updated, mapStateToProps will be called. The results of mapStateToProps must be a plain object, which will be merged into the wrapped component’s props. If you don't want to subscribe to store updates, pass null or undefined in place of mapStateToProps.
+*/
+const mapStateToProps = state => ({
+  item: state.item
+});
+
 /*
 The connect() function connects a React component to a Redux store.
 
@@ -54,8 +73,4 @@ It provides its connected component with the pieces of the data it needs from th
 
 It does not modify the component class passed to it; instead, it returns a new, connected component class that wraps the component you passed in.
 */
-const mapStateToProps = (state) => ({
-  item: state.item
-});
-
-export default connect(mapStateToProps, { getItems })(ShoppingList)
+export default connect(mapStateToProps, { deleteItem, getItems })(ShoppingList);
