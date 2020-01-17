@@ -1,12 +1,12 @@
-import uuid from "uuid";
-import { GET_ITEMS, ADD_ITEM, DELETE_ITEM } from "../actions/types"; //Types of actions
+import uuid from 'uuid';
+import { GET_ITEMS, ADD_ITEM, DELETE_ITEM } from '../actions/types'; //Types of actions
 
 const initalState = {
   items: [
-    { id: uuid(), name: "Eggs" },
-    { id: uuid(), name: "Milk" },
-    { id: uuid(), name: "Steak" },
-    { id: uuid(), name: "Candy" }
+    { id: uuid(), name: 'Eggs' },
+    { id: uuid(), name: 'Milk' },
+    { id: uuid(), name: 'Steak' },
+    { id: uuid(), name: 'Candy' }
   ]
 };
 
