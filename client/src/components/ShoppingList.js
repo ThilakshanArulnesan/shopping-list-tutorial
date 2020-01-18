@@ -17,7 +17,7 @@ function ShoppingList({ getItems, deleteItem, item }) {
 
   return (
     <Container>
-      <Button
+      {/* <Button
         color='dark'
         style={{ marginBottom: '2rem' }}
         onClick={() => {
@@ -28,7 +28,7 @@ function ShoppingList({ getItems, deleteItem, item }) {
         }}
       >
         Add Item
-      </Button>
+      </Button> */}
       <ListGroup>
         <TransitionGroup className='shopping-list'>
           {items.map(({ id, name }) => {
