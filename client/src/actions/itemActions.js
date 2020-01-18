@@ -1,10 +1,26 @@
-import { GET_ITEMS, ADD_ITEM, DELETE_ITEM } from './types'; //Types of actions
+import axios from 'axios';
+import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING } from './types'; //Types of actions
 
-export const getItems = () => {
-  return {
-    type: GET_ITEMS
-  };
+//Dispatches actions with proper payloads
+export const getItems = () => dispatch => {
+  dispatch(setItemsLoading());
+  axios.get('/api/items').then(res =>
+    dispatch({
+      type: GET_ITEMS,
+      payload: res.data
+    })
+  );
 };
+
+export const addItem = item => dispatch => {
+  axios.post('/api/items', item).then(res =>
+    dispatch({
+      type: ADD_ITEM,
+      payload: res.data
+    })
+  );
+};
+
 export const deleteItem = id => {
   return {
     type: DELETE_ITEM,
@@ -12,9 +28,8 @@ export const deleteItem = id => {
   };
 };
 
-export const addItem = item => {
+export const setItemsLoading = item => {
   return {
-    type: ADD_ITEM,
-    payload: item
+    type: ITEMS_LOADING
   };
 };
