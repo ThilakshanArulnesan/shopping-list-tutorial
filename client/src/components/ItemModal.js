@@ -17,7 +17,6 @@ function ItemModal({ addItem }) {
   const [name, setName] = useState('');
 
   const toggle = () => {
-    console.log('toggle');
     setModal(!modal);
   };
 
